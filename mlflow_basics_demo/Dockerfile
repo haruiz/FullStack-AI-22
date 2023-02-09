@@ -1,3 +1,7 @@
 FROM jupyter/scipy-notebook
-RUN pip install mlflow
-RUN pip install sklearn
+
+USER root
+RUN sudo apt-get update && sudo apt install tree -y
+
+USER jovyan
+RUN pip install mlflow sklearn
