@@ -10,6 +10,7 @@ service-account.json
 # Distribution / packaging
 .Python
 build/
+data/
 develop-eggs/
 dist/
 downloads/
