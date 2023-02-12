@@ -17,27 +17,26 @@ services:
     restart: always
     networks:
       - demonet
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: docker-demo.api
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/demodb
-      - IMAGES_FOLDER=./data/images
-      - GOOGLE_APPLICATION_CREDENTIALS=/opt/service-account.json
-      - GCP_BUCKET_NAME=docker-demo-images
-    ports:
-      - "8000:8000"
-    command: bash -c "ls & uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
-    image: docker-demo/api
-    volumes:
-      - ./:/code
-      - ./data:/data
-    depends_on:
-      - db
-    networks:
-      - demonet
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    image: docker-demo/api
+#    container_name: docker-demo.api
+#    environment:
+#      - DATABASE_URL=postgresql://postgres:postgres@db:5432/demodb
+#      - GOOGLE_APPLICATION_CREDENTIALS=/opt/service-account.json
+#      - GCP_BUCKET_NAME=uao-coure-images
+#    ports:
+#      - "8000:8000"
+#    command: bash -c "ls & uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+#    volumes:
+#      - ./:/code
+#      - ./data:/data
+#    depends_on:
+#      - db
+#    networks:
+#      - demonet
   pgadmin:
     container_name: docker-demo.pgadmin
     image: dpage/pgadmin4

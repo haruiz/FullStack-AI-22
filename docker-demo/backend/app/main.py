@@ -1,9 +1,15 @@
 from app.db import create_db, drop_db
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import image_record
 
 app = FastAPI()
+
+
+@app.get("/")
+def home():
+    return {"message": "Hello World from docker"}
+
 
 # add CORS middleware
 app.add_middleware(
@@ -39,8 +45,3 @@ app.include_router(
     tags=["images"],
     responses={404: {"description": "Not found"}},
 )
-
-
-@app.get("/")
-def home():
-    return {"message": "Hello World from docker"}

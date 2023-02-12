@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine, event
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import (
+    sessionmaker,
+)  # create a session factory to connect to the database
 from decouple import config
 from functools import wraps
 
@@ -16,6 +18,7 @@ def on_connect(dbapi_con, con_record):
 
 event.listen(engine, "connect", on_connect)
 
+# connect factory to the database
 SessionMaker = sessionmaker(
     autocommit=False, autoflush=False, bind=engine, expire_on_commit=False
 )
