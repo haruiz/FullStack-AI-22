@@ -1,8 +1,27 @@
 from app.db import create_db, drop_db
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import image_record
+from app.routers import image_record, label
+from decouple import config
+import os
 
+
+def initialize_env_vars():
+    """
+    Initialize environment variables
+    :return:
+    """
+    env_variables = [
+        "DATABASE_URL",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "GCP_BUCKET_NAME",
+    ]
+    for env_var in env_variables:
+        if not os.getenv(env_var):
+            os.environ[env_var] = config(env_var)
+
+
+initialize_env_vars()
 app = FastAPI()
 
 
@@ -43,5 +62,12 @@ app.include_router(
     image_record.router,
     prefix="/images",
     tags=["images"],
+    responses={404: {"description": "Not found"}},
+)
+
+app.include_router(
+    label.router,
+    prefix="/labels",
+    tags=["labels"],
     responses={404: {"description": "Not found"}},
 )

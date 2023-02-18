@@ -19,6 +19,21 @@ class ImageRecordCRUD(
     def __init__(self):
         super().__init__(models.ImageRecord)
 
+    def check_if_exists(self, db: Session, filename: str) -> bool:
+        """
+        Check if an image record exists in the database
+        :param db:
+        :param filename:
+        :return:
+        """
+        db_obj = (
+            db.query(self.model_cls)
+            .filter(self.model_cls.filename == filename)
+            .first()
+        )
+        is_exist = db_obj is not None
+        return is_exist
+
 
 # Create a singleton instance of the ImageRecordCRUD class
 image_record = ImageRecordCRUD()

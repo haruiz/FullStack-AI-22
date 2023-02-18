@@ -2,7 +2,6 @@ import os
 from google.cloud import storage
 
 
-
 class GCPUtils:
     @staticmethod
     def get_gcp_project_id() -> str:

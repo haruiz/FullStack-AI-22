@@ -11,7 +11,7 @@ class ImageRecordSchema(BaseModel):
     width: int
     height: int
     mode: str
-    label: str
+    label_id: int
     bucket: Optional[str]
     blob_name: Optional[str]
     notes: Optional[str]

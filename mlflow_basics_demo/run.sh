@@ -1,6 +1,7 @@
 #!/bin/bash
 IMAGE_NAME=mlflow_demo_image
 CONTAINER_NAME=mlflow_demo
+
 docker build -t $IMAGE_NAME .
 
 if [ "$(docker ps -aq -f status=running -f name=$CONTAINER_NAME)" ]; then
