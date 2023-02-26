@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "iris-clf-model"
+version = "0.1.0"
+description = ""
+authors = ["haruiz <henryruiz22@gmail.com>"]
+readme = "README.md"
+packages = [{include = "iris_clf_model"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+numpy = "^1.24.2"
+scipy = "^1.10.1"
+pandas = "^1.5.3"
+seaborn = "^0.12.2"
+matplotlib = "^3.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

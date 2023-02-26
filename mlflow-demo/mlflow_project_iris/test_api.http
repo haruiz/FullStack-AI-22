@@ -1,0 +1,15 @@
+
+POST http://localhost:8081/invocations
+accept: application/json
+Content-Type: application/json
+
+{
+    "instances": [
+      {
+        "sepal-length": 5.0,
+        "sepal-width": 3.2,
+        "petal-length": 1.2,
+        "petal-width": 0.2
+      }
+    ]
+}

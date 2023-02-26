@@ -4,4 +4,4 @@ USER root
 RUN sudo apt-get update && sudo apt install tree -y
 
 USER jovyan
-RUN pip install mlflow sklearn
+RUN pip install mlflow sklearn xgboost pandas numpy

@@ -1,0 +1,14 @@
+python: "3.10.9"
+build_dependencies:
+  - pip
+dependencies:
+  - scipy
+  - numpy
+  - pandas
+  - matplotlib
+  - scikit-learn
+  - seaborn
+  - cloudpickle
+  - mlflow
+  - requests
+  - click

@@ -1,0 +1,1 @@
+mlflow models serve -m ./mlruns/935466071645601962/685f36ac842643c68dcf79c7bf9c2709/artifacts/SVM -p 8081

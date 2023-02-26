@@ -1,0 +1,9 @@
+name: iris-classifier
+#docker_env:
+# image: haruiz/iris-classifier
+python_env: python_env.yaml
+entry_points:
+  main:
+    parameters:
+      nsplits: {type: int, default: 10}
+    command: "python main.py --nsplits {nsplits}"
