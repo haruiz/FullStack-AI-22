@@ -230,6 +230,7 @@ def promote_model_to_stage(registered_model_name, stage, version=None):
             version=version,
             stage=stage,
         )
+        return
     latest_versions = [mv.version for mv in model.latest_versions]
     client.transition_model_version_stage(
         name=registered_model_name,
