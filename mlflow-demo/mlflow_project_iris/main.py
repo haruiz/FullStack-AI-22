@@ -103,8 +103,8 @@ def run_experiment(experiment_id, n_splits=5):
         with mlflow.start_run(experiment_id=experiment_id, run_name=run_id) as run:
             kfold = model_selection.KFold(n_splits=n_splits, random_state=7, shuffle=True)
             cv_results = model_selection.cross_val_score(model, X, y, cv=kfold, scoring='accuracy')
-
             print(f"Accuracy: {cv_results.mean():.3f} ({cv_results.std():.3f})")
+
             # Log the model accuracy to MLflow
             mlflow.log_metric("accuracy", cv_results.mean())
             mlflow.log_metric("std", cv_results.std())
@@ -114,17 +114,16 @@ def run_experiment(experiment_id, n_splits=5):
             for fold_idx, kflod_result in enumerate(cv_results):
                 mlflow.log_metric(key="crossval", value=kflod_result, step=fold_idx)
 
-            # fit model on the training set and log the model to MLflow
+            # # fit model on the training set and log the model to MLflow
             X_train, X_validation, Y_train, Y_validation = split_dataset(data)
             model.fit(X_train, Y_train)
             signature = infer_signature(X_train, model.predict(X_train))
-
             mlflow.sklearn.log_model(
                 sk_model=model,
                 artifact_path=model_name,
                 signature=signature
             )
-
+            print("Model saved in run %s" % mlflow.active_run().info.run_uuid)
             # log artifacts
             fig = generate_confusion_matrix_figure(model_name, model)
             mlflow.log_figure(fig, f"{model_name}-confusion-matrix.png")
@@ -199,9 +198,9 @@ def register_best_model(experiment_id, metric, registered_model_name):
     best_run = get_best_run(experiment_id, metric)
     # Get the model artifact URI
     model_uri = f"runs:/{best_run.info.run_id}/{best_run.data.params['model_name']}"
-    registered_model = find_model_by_name(registered_model_name)
-    if registered_model is None:
-        registered_model = mlflow.register_model(model_uri, registered_model_name)
+    # registered_model = find_model_by_name(registered_model_name)
+    # if registered_model is None:
+    registered_model = mlflow.register_model(model_uri, registered_model_name)
     return registered_model
 
 
@@ -216,7 +215,7 @@ def find_model_by_name(registered_model_name):
     return model
 
 
-def promote_model_to_stage(registered_model_name, stage):
+def promote_model_to_stage(registered_model_name, stage, version=None):
     """
     Promote the latest version of a model to the given stage
     :param registered_model_name:
@@ -225,11 +224,33 @@ def promote_model_to_stage(registered_model_name, stage):
     """
     client = MlflowClient()
     model = client.get_registered_model(registered_model_name)
+    if version is not None:
+        client.transition_model_version_stage(
+            name=registered_model_name,
+            version=version,
+            stage=stage,
+        )
     latest_versions = [mv.version for mv in model.latest_versions]
     client.transition_model_version_stage(
         name=registered_model_name,
         version=max(latest_versions),
         stage=stage,
+    )
+
+
+def rollback_model_version(registered_model_name, stage, version):
+    """
+    Rollback the model version to the given version
+    :param registered_model_name:
+    :param stage:
+    :param version:
+    :return:
+    """
+    client = MlflowClient()
+    client.transition_model_version_stage(
+        name=registered_model_name,
+        version=version,
+        stage=stage
     )
 
 
@@ -295,38 +316,59 @@ def create_experiment(experiment_name):
     :return:
     """
     experiment = mlflow.get_experiment_by_name(experiment_name)
-    if experiment:
+    if experiment is not None:
         experiment_id = experiment.experiment_id
     else:
         experiment_id = mlflow.create_experiment(experiment_name)
     return experiment_id
 
 
+def get_best_model_uri(experiment_id, metric):
+    """
+    Get the best model URI for the experiment
+    :param experiment_id:
+    :param metric:
+    :return:
+    """
+    # Get the best run
+    best_run = get_best_run(experiment_id, metric)
+    # Get the model artifact URI
+    model_uri = f"runs:/{best_run.info.run_id}/{best_run.data.params['model_name']}"
+    return model_uri
+
+
 if __name__ == '__main__':
     # mlflow.set_tracking_uri("http://myserver.com/mlflow:5000")
     parser = argparse.ArgumentParser()
     parser.add_argument('--nsplits', type=int, default=5)
+    parser.add_argument('--nephocs', type=int, default=500)
     args = parser.parse_args()
 
     # Create a new experiment in MLflow and get experiment ID
     experiment_name = f"Iris Classifier"
     experiment_id = create_experiment(experiment_name)
 
-    # run_experiment(experiment_id, n_splits=args.nsplits)
-    # run = get_best_run(experiment_id, "accuracy")
-    # model = ge_best_model(experiment_id, "accuracy")
+    #run_experiment(experiment_id, n_splits=args.nsplits)
     # list_experiment_models(experiment_id)
+    run = get_best_run(experiment_id, metric="accuracy")
+    print(run.info.run_name,
+          run.data.metrics["accuracy"],
+          run.data.params["model_name"])
 
-    data = [{
-        "sepal-length": 5.1,
-        "sepal-width": 3.5,
-        "petal-length": 1.4,
-        "petal-width": 0.2
-    }]
-    # run = get_best_run(experiment_id, "accuracy")
-    stage = "Production"
-    model_name = "iris-classifier"
-    register_best_model(experiment_id, "accuracy", model_name)
-    promote_model_to_stage(model_name, stage)
-    predictions = call_model_at_stage(model_name, stage, data)
-    print(predictions)
+    model_uri = get_best_model_uri(experiment_id, metric="accuracy")
+    print(model_uri)
+
+    # model_name = "iris-classifier-uao-mar4-23"
+    # stage = "Production"
+    # register_best_model(experiment_id, "accuracy", model_name)
+    # promote_model_to_stage(model_name, stage)
+    # rollback_model_version(model_name, stage, 2)
+
+    # data = [{
+    #     "sepal-length": 6.9,
+    #     "sepal-width": 3.1,
+    #     "petal-length": 5.1,
+    #     "petal-width": 2.3
+    # }]
+    # predictions = call_model_at_stage(model_name, stage, data)
+    # print(predictions)
