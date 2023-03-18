@@ -11,12 +11,12 @@ app = FastAPI()
 
 @app.on_event("startup")
 def load_model():
-    app.state.model = ModelLoader(
-        path="models/tf/iris", name="iris", backend="tensorflow"
-    )
     # app.state.model = ModelLoader(
-    #     path="models/sklearn/iris_model.sav", name="iris", backend="sklearn"
+    #     path="models/tf/iris", name="iris", backend="tensorflow"
     # )
+    app.state.model = ModelLoader(
+        path="models/sklearn/iris_model.sav", name="iris", backend="sklearn"
+    )
 
 
 app.add_middleware(

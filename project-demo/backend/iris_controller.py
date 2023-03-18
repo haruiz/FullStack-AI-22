@@ -32,6 +32,7 @@ async def get_model(req: Request):
 
 @cbv(router)
 class IrisController:
+    # injection dependecy pattern
     model: ModelLoader = Depends(get_model)
 
     @router.get("/")

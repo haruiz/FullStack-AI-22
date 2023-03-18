@@ -11,6 +11,10 @@ WORKDIR /app
 COPY --from=build-stage /tmp/requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 COPY . .
-RUN ls -la
+
+# this line is just for debugging
+RUN pwd && ls -la 
+
 EXPOSE 8501
 CMD ["streamlit", "run", "home.py"]
+

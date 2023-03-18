@@ -12,6 +12,8 @@ services:
       - backend
     environment:
       - API_ENDPOINT=http://backend:8000
+    volumes:
+      - ./frontend:/app
     networks:
       - projectnet
   backend:
@@ -19,9 +21,7 @@ services:
     ports:
       - 8000:8000
     build: backend
+    volumes:
+      - ./backend:/app
     networks:
       - projectnet
-    volumes:
-      - ./backend:/code
-      - ./backend/models:/models
-    command: bash -c "ls & uvicorn api:app --host 0.0.0.0 --port 8000 --reload"

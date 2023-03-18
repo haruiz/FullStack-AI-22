@@ -4,7 +4,7 @@ import os
 import requests
 import json
 
-# set the api endpoint
+# set the api endpoint in development mode
 if "API_ENDPOINT" not in os.environ:
     os.environ["API_ENDPOINT"] = config("API_ENDPOINT")
 
