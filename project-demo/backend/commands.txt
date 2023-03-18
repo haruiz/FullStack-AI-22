@@ -1,0 +1,39 @@
+docker build -t iris_model .
+
+docker run -d -p 8000:8000 iris_model
+
+docker ps
+
+docker logs <container_id>
+
+docker stop <container_id>
+
+docker rm <container_id>
+
+docker rmi iris_model
+
+
+# gcloud init # if you haven't already
+# gcloud login # login to your account
+# gcloud projects list # list your projects
+# gcloud config set project [PROJECT_ID] # set your default project
+# gcloud config set compute/zone [ZONE] # set your default zone
+# gcloud auth configure-docker # configure docker to use gcloud
+#
+#gcloud builds submit --tag gcr.io/cloud-run-fastapi-367012/myapi
+# gcloud services enable artifactregistry.googleapis.com
+# gcloud artifacts repositories create me-docker-repo --repository-format=docker \
+#     --location=us-west2 --description="Docker repository"
+# gcloud artifacts repositories list
+#
+#
+# gcloud builds submit --region=us-west2 --tag us-west2-docker.pkg.dev/project-id/me-docker-repo/gcr.io/iris-model:tag1
+#
+# gcloud builds list # list your builds
+# gcloud builds submit --tag gcr.io/stat650-midterm-project/stat650-dashboard # build the docker image and push it to gcr.io
+# gcloud run deploy stat650-dashboard --image gcr.io/stat650-midterm-project/stat650-dashboard # deploy the image to Cloud Run
+#
+# gcloud builds submit --tag gcr.io/iris-model
+# gcloud run deploy iris-model-api --image gcr.io/iris-model # deploy the image to Cloud Run
+
+
