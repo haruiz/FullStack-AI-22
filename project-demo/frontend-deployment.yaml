@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/project-demo-projectnet: "true"
+        io.kompose.service: frontend
+    spec:
+      containers:
+        - env:
+            - name: API_ENDPOINT
+              value: http://backend:8000
+          image: frontend
+          name: project-frontend
+          ports:
+            - containerPort: 8501
+          resources: {}
+          volumeMounts:
+            - mountPath: /app
+              name: frontend-claim0
+      restartPolicy: Always
+      volumes:
+        - name: frontend-claim0
+          persistentVolumeClaim:
+            claimName: frontend-claim0
+status: {}

@@ -42,6 +42,6 @@ app.include_router(
 )
 
 
-@app.get("/hi")
+@app.get("/")
 def root():
     return {"message": "Hello World from FastAPI and Docker Deployment course"}

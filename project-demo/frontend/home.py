@@ -46,3 +46,4 @@ if i_was_clicked:
     # call the api
     results = call_api(sepal_length, sepal_width, petal_length, petal_width)
     st.write(results)
+    st.balloons()
