@@ -15,6 +15,6 @@ COPY . .
 # this line is just for debugging
 RUN pwd && ls -la 
 
-EXPOSE 8501
-CMD ["streamlit", "run", "home.py"]
+
+CMD ["streamlit", "run", "home.py", "--server.port", "8501"]
 

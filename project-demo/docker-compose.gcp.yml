@@ -1,0 +1,8 @@
+
+version: '3.9'
+
+services:
+ frontend:
+   image: gcr.io/uao-course/frontend-iris-app:${DOCKER_FRONTEND_IMAGE_TAG:-latest}
+ backend:
+   image: gcr.io/uao-course/backend-iris-app:${DOCKER_BACKEND_IMAGE_TAG:-latest}

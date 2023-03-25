@@ -15,6 +15,4 @@ COPY . .
 # this line is just for debugging
 RUN pwd && ls -la 
 
-EXPOSE 8080
-# CMD ["python", "main.py"]
-CMD ["uvicorn", "--host", "0.0.0.0", "--reload", "--reload-dir", "/app", "api:app"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--reload", "--reload-dir", "/app", "api:app", "--port", "8000"]

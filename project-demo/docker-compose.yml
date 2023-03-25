@@ -13,15 +13,17 @@ services:
     environment:
       - API_ENDPOINT=http://backend:8000
     volumes:
-      - ./frontend:/app
+      - ${PWD}/frontend:/app
     networks:
       - projectnet
   backend:
     container_name: project-backend
     ports:
       - 8000:8000
-    build: backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
     volumes:
-      - ./backend:/app
+      - ${PWD}/backend:/app
     networks:
       - projectnet
